@@ -267,6 +267,23 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 var Vue = require('vue');
 
 var axios = require('axios');
+
+
+new Vue({
+    el:"#app",
+    data:{
+        item:'',
+        items:[]
+    },
+    methods:{
+        addTodo:function(){
+            
+        }
+    },
+    mounted:{
+
+    }
+});
 },{"axios":4,"vue":30}],4:[function(require,module,exports){
 module.exports = require('./lib/axios');
 },{"./lib/axios":6}],5:[function(require,module,exports){
