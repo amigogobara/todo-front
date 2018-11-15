@@ -1,0 +1,25 @@
+{
+  "name": "todo-vue",
+  "version": "1.0.0",
+  "description": "todo list",
+  "main": "script.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "browserify": "^16.2.3",
+    "vue": "^2.5.17"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amigogobara/todo-front.git"
+  },
+  "author": "ahmed salim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amigogobara/todo-front/issues"
+  },
+  "homepage": "https://github.com/amigogobara/todo-front#readme"
+}
