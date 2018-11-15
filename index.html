@@ -6,29 +6,94 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <title>Vue Todo</title>
 </head>
-<body id="app">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card blue-grey">
-                <div class="card-content white-text">
-                    <span class="card-title">Todo List</span>
-                    <ul v-for=item in items style="list-style-type:circle">
-                        <li>{{ item.text }}</li>
-                    </ul>
-                </div>
-                <div class="card-action">
-                    <div class="input-field inline">
-                        <input v-model="text" type="text" class="validate" placeholder="Add todo">
+<style>
+    [v-cloak] {
+  display: none; }
+</style>
+<body>
+    <div id="app">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card blue-grey">
+                    <div class="card-content white-text">
+                        <span class="card-title">Todo List</span>
+                        <p v-if='items.length < 1'>No items</p>
+                        <ul v-cloak>
+                            <li v-for="item in items">{{ item.text }} <a href="#" v-on:click="remove(item)"><i class="fas fa-trash-alt"></i></a></li>
+                        </ul>
                     </div>
-                    <a class="waves-effect waves-light btn" v-on:click="addTodo()">add</a>
+                    <div class="card-action">
+                        <div class="input-field inline">
+                            <input v-model="text" type="text" class="validate" placeholder="Add todo">
+                        </div>
+                        <a class="waves-effect waves-light btn" v-on:click="addTodo()">add</a>
+                    </div>
+                    <div v-cloak v-if="message != ''" class="alert alert-danger">{{message}}</div>
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
     
 
-    <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                text:'',
+                items:[],
+                message:''
+            },
+            methods:{
+                addTodo(){
+                    if(this.text != ''){
+                    var item = {
+                        _id : Date.now(),
+                        text: this.text,
+                        temporary:true
+                    };
+                    this.items.push(item);
+                    axios({
+                        method: 'post',
+                        url: 'http://todo.test/api/storeTodo',
+                        data: {
+                            text: this.text,
+                        }
+                        }).then(function(respo){
+                            console.log(respo)
+                        });
+                        this.text = '';
+                    }else{
+                        this.message = 'add todo';
+                    }
+                },
+                remove(item){
+                            var newItems = this.items.filter(function(i){
+                            return item._id !== i._id;
+                        });
+                        this.items = newItems;
+                        if(!item.temporary){
+                            axios({
+                                method:'post',
+                                url:'http://todo.test/api/deleteTodo',
+                                data:{"id":item._id}
+                            }).then(function(respo){
+                                console.log(respo);
+                            }).catch(function(r){console.log(r.request)})
+                        }
+                    
+                }
+            },
+            mounted(){
+                axios.get('http://todo.test/api/todos')
+                .then(response => (this.items = response.data.todos))
+            }
+        });
+    </script>
 </body>
 </html>
