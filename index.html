@@ -70,15 +70,15 @@
                     }
                 },
                 remove(item){
-                            var newItems = this.items.filter(function(i){
-                            return item._id !== i._id;
-                        });
-                        this.items = newItems;
                             axios({
                                 method:'post',
                                 url:'http://todo.test/api/deleteTodo',
                                 data:{"id":item._id}
                             }).then(function(respo){
+                                var newItems = this.items.filter(function(i){
+                                return item._id !== i._id;
+                                });
+                            this.items = newItems;
                                 console.log(respo);
                             }).catch(function(r){console.log(r.request)})
                         
