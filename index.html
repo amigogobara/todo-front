@@ -55,15 +55,12 @@
                     var item = {
                         _id : Date.now(),
                         text: this.text,
-                        temporary:true
                     };
                     this.items.push(item);
                     axios({
                         method: 'post',
                         url: 'http://todo.test/api/storeTodo',
-                        data: {
-                            text: this.text,
-                        }
+                        data: item
                         }).then(function(respo){
                             console.log(respo)
                         });
@@ -77,7 +74,6 @@
                             return item._id !== i._id;
                         });
                         this.items = newItems;
-                        if(!item.temporary){
                             axios({
                                 method:'post',
                                 url:'http://todo.test/api/deleteTodo',
@@ -85,7 +81,7 @@
                             }).then(function(respo){
                                 console.log(respo);
                             }).catch(function(r){console.log(r.request)})
-                        }
+                        
                     
                 }
             },
