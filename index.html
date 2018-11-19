@@ -56,38 +56,43 @@
                         _id : Date.now(),
                         text: this.text,
                     };
+                    console.log(item.id);
                     this.items.push(item);
                     axios({
                         method: 'post',
                         url: 'http://todo.test/api/storeTodo',
-                        data: item
+                        data: {id:Date.now(),text:this.text}
                         }).then(function(respo){
                             console.log(respo)
-                        });
+                        }).catch(function(r){console.log(r.request)});
                         this.text = '';
                     }else{
                         this.message = 'add todo';
                     }
                 },
                 remove(item){
+                    if(this.items != undefined){
                             axios({
                                 method:'post',
                                 url:'http://todo.test/api/deleteTodo',
                                 data:{"id":item._id}
-                            }).then(function(respo){
-                                var newItems = this.items.filter(function(i){
-                                return item._id !== i._id;
+                            }).then(response => {
+                                    var newItems = this.items.filter(function(i){
+                                    return item._id !== i._id;
                                 });
-                            this.items = newItems;
-                                console.log(respo);
-                            }).catch(function(r){console.log(r.request)})
+                                this.items = newItems;
+                                
+                            }).catch(function(r){console.log(r)});
+                    }
                         
                     
                 }
             },
             mounted(){
                 axios.get('http://todo.test/api/todos')
-                .then(response => (this.items = response.data.todos))
+                .then(response => {
+                    this.items = response.data.todos
+                    })
             }
         });
     </script>
